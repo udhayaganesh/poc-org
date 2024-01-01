@@ -1,80 +1,67 @@
-version: 2.1 
+version: 2.1
+orbs:
+  node: circleci/node@4.7.0
+  heroku: circleci/heroku@1.2.6
+
 jobs:
-  run-tests:
+  build_and_test:
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:17.2.0
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package.json" }}
-            - dependency-cache-
+      - node/install-packages:
+          app-dir: ~/project
+          cache-version: v1
+          cache-path: node_modules
+          pkg-manager: yarn
       - run:
-          name: Install Dependencies
-          command: . build/install_dependencies.sh
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          command: yarn test
+          name: Run tests
+      - run:
+          command: yarn build
+          name: Build app
+      - persist_to_workspace:
+          root: ~/project
           paths:
-            - node_modules
-      - run: 
-          name: Login to Org
-          command: . build/login_to_sandbox.sh
-      - run:
-          name: Run Apex Tests
-          command: . build/run_apex_tests.sh
-      - store_test_results:
-          path: test-results
-  code-review:
+            - .
+  deploy: # this can be any name you choose
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:17.2.0
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package.json" }}
-            - dependency-cache-
-      - run:
-          name: Install Dependencies
-          command: . build/install_dependencies.sh
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-      - run:
-          name: SFDX Scanner Analysis
-          command: . build/run_sfdx_scanner.sh
-      - store_artifacts:
-          path: sfdxScannerAnalysis.csv
-  deploy-code:
-    docker:
-      - image: circleci/node:latest
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - dependency-cache-{{ checksum "package.json" }}
-            - dependency-cache-
-      - run:
-          name: "Install Dependencies"
-          command: . build/install_dependencies.sh
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-      - run: 
-          name: Login to Org
-          command: . build/login_to_org.sh
-      - run:
-          name: Deploy to Org
-          command: . build/deploy_code.sh
+      - attach_workspace:
+          at: ~/project
+      - heroku/deploy-via-git: 
+          force: true # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
+
 workflows:
-  version: 2
-  validate:
+  on_commit:
     jobs:
-      - run-tests
-      - code-review:
-          requires:
-            - run-tests
-      - deploy-code:
-          requires:
-            - code-review
+      - build_and_test
+      # Follow instructions here to authenticate git for Heroku: https://devcenter.heroku.com/articles/git#http-git-authentication
+      # The following code may be uncommented, onnce HEROKU_API_KEY & HEROKU_APP_NAME environemnt variables are present
+      # Read more: https://circleci.com/docs/2.0/env-vars/
+      # - deploy:
+      #     requires:
+      #       - build_and_test # only deploy if the build_and_test job has completed
+      #     filters:
+      #       branches:
+      #         only: master # only deploy when on main/master
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"       
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - build_and_test
+      # Follow instructions here to authenticate git for Heroku: https://devcenter.heroku.com/articles/git#http-git-authentication
+      # The following code may be uncommented, onnce HEROKU_API_KEY & HEROKU_APP_NAME environemnt variables are present
+      # Read more: https://circleci.com/docs/2.0/env-vars/
+      # - deploy:
+      #     requires:
+      #       - build_and_test # only deploy if the build_and_test job has completed
+      #     filters:
+      #       branches:
+      #         only: master # only deploy when on main/master

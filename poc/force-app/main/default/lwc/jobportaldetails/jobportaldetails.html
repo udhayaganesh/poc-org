@@ -1,0 +1,23 @@
+<template >
+     Job Details
+      
+        <div class="container">
+            <lightning-layout>
+            
+                  <template  for:each={summaryData} for:item="summary">
+                        <lightning-layout-item key={summary.id} padding="around-small">
+                        
+                       {summary.Name} <br/>
+                       {summary.jobtitle__c} <br/>
+                       {summary.jobdesc__c} <br/>
+                       {summary.expr__c} <br/>
+                       {summary.location__c} <br/>
+                         
+                         
+                        </lightning-layout-item>
+                     
+                 </template>
+                    
+               </lightning-layout></div>
+     
+               </template>

@@ -1,0 +1,51 @@
+<template>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid slds-page-header">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-custom-custom18" title="SearchDetails">
+                        <lightning-icon icon-name="custom:custom18"></lightning-icon>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="#" class="slds-card__header-link slds-truncate" title="Search Details">
+                            <span> Glumes Job Portal</span>
+                        </a>
+                    </h2>
+                </div>
+            </header>
+        </div>
+
+    </article>
+
+
+    <template if:true={summarypage}>
+
+        <br />
+        <!--{detailpage} {summarypage}-->
+        <div class="container">
+            <lightning-layout>
+
+                <template for:each={summaryData} for:item="summary">
+
+                    <lightning-layout-item key={summary.Id} padding="around-small">
+
+                       <a id={summary.Id} onclick={handleSelect}>{summary.Name} </a> 
+                        <div class="content">
+                            <c-jobtile job={summary} key={summary.Id} class="slds-var-m-around_x-small">
+                            </c-jobtile>
+                        </div>
+
+                    </lightning-layout-item>
+
+                </template>
+
+            </lightning-layout>
+        </div>
+    </template>
+    <template if:true={detailpage}>
+        loading...
+        <c-jobportaldetails recordid={selectedrecid}></c-jobportaldetails>
+    </template>
+</template>

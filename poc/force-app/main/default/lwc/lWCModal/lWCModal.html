@@ -1,0 +1,21 @@
+<template>
+    <lightning-modal-header label={content}></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-p-around_small">
+            <lightning-input name="name" label="Name" value="">
+            </lightning-input>
+            <lightning-input type="email" name="email" label="Email" value="">
+            </lightning-input>
+            <lightning-input type="tel" name="mobile" label="Mobile" value="">
+            </lightning-input>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="slds-m-top_small slds-align_absolute-center">
+            <lightning-button variant="Neutral" label="Close" class="slds-m-left_x-small" onclick={handleClose}>
+            </lightning-button>
+            <lightning-button variant="brand" class="slds-m-left_x-small" label="Save" onclick={handleSave}>
+            </lightning-button>
+        </div>
+    </lightning-modal-footer>
+</template>

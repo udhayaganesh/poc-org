@@ -1,0 +1,86 @@
+<template>
+    <lightning-layout horizontal-align="center">
+        <lightning-layout-item padding="horizontal-small">
+            <lightning-combobox name="carTypes" label="Car Types" placeholder="All Types" value={selectedValue} 
+            onchange={handleCarTypeChange} variant="label-hidden" options={carTypes} ></lightning-combobox>
+        </lightning-layout-item>
+        <lightning-layout-item padding="horizontal-large">
+            <lightning-button label="New" onclick={createNewCarType} ></lightning-button>
+            <lightning-button label="1 step to Generate Quote" onclick={showModalBox} ></lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
+
+
+<!-- modal start -->      
+<template if:true={isShowModal}>
+
+    <!--
+        I Used SLDS for this code
+        Here is link https://www.lightningdesignsystem.com/components/modals/
+    --> 
+
+<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+<div class="slds-modal__container">
+<!-- modal header start -->
+  <header class="slds-modal__header">
+     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+        <lightning-icon icon-name="utility:close"
+           alternative-text="close"
+           variant="inverse"
+           size="small" ></lightning-icon>
+        <span class="slds-assistive-text">Close</span>
+     </button>
+     <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Customer Details</h2>
+  </header>
+
+  <!-- modal body start -->
+  <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+    <p><lightning-input 
+        type="text" 
+        data-element="user-input-email" 
+        label="Name"> 
+     </lightning-input></p>
+
+     <p><lightning-input 
+        type="email" 
+        data-element="user-input-email" 
+        label="Email Address"> 
+     </lightning-input></p>
+
+<p>
+         <lightning-input 
+         type="tel" 
+         name="mobile"
+         label="Mobile Number"
+         value={mobilevalue}
+        >
+ </lightning-input>
+</p>
+ <div class="slds-m-top_small slds-align_absolute-center">
+     <lightning-button 
+         variant="Neutral" 
+         label="Cancel" 
+         class="slds-m-left_x-small" 
+         onclick={handleCancel}>
+     </lightning-button>
+     <lightning-button 
+         variant="brand" 
+         class="slds-m-left_x-small" 
+         label="Generate Quote" 
+         onclick={handleNext}>
+     </lightning-button>
+ </div>
+
+  </div>
+
+  <!-- modal footer start-->
+  
+
+</div>
+</section>
+<div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+<!-- modal end -->
+
+
+</template>

@@ -12,6 +12,6 @@ public with sharing class CarExperience {
                     CreatedBy.CompanyName
                FROM Car_Experience__c
                WHERE Car__c  = :carId
-               ORDER BY CreatedDate ];
+               ORDER BY CreatedDate limit 100];
     }
 }

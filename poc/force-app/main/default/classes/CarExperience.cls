@@ -3,7 +3,7 @@ public with sharing class CarExperience {
     @AuraEnabled
     public static List<Car_Experience__c> getExperiences(String carId){
         return [SELECT Id,
-                    Name,
+                    Name
                     Experience__c,
                     LastModifiedDate,
                     CreatedDate,
@@ -12,6 +12,6 @@ public with sharing class CarExperience {
                     CreatedBy.CompanyName
                FROM Car_Experience__c
                WHERE Car__c  = :carId
-               ORDER BY CreatedDate limit 100];
+               ORDER BY CreatedDate limit 10];
     }
 }
